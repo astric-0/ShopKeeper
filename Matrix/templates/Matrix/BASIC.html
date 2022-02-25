@@ -1,0 +1,233 @@
+{%load static%}
+{% comment %} {% static 'static_jquery/js/jquery.js' %} {% endcomment %}
+<!DOCTYPE html>
+<html>
+    <head>
+        {%if title%}<title> {{title}} </title>{%endif%}
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <link href="{% static 'fontawesome_free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">        
+        <script src="{% static 'fontawesome_free/js/all.min.js' %}"></script>
+        <style>            
+            .ft-purple{ color : purple; }
+            .ft-blue{ color : blue; }
+            .ft-teal{ color : teal; }
+            .ft-darksalmon{ color : darksalmon; }
+            .ft-aqua{ color : aqua; }
+            body{ font-family: 'Comfortaa', cursive; background-color : green; }
+            select, .boxesIcon{ transition : all 1s; }
+            .list-group-item{ transition : all 0.5s; }
+            .list-group-item:hover{ background-color : black;}
+            .list-group-item:hover label{ color : white;}
+            #addNewBoxBtn:hover , #editCountBtn:hover , #soldBtn:hover{ color : white; }
+            #gridSection .container , #defaultSection .container , #addNewBoxSection .container , #editCountSection .container , #soldSection .container{ animation : widthanimation 0.55s 0s  alternate; }
+            @keyframes widthanimation{
+                from { width : 40%; }
+                to{ width : 100%; }
+            }            
+            #homeList , #searchBox{ animation : opacityanimation 1s 0s alternate; }
+            @keyframes opacityanimation{
+                from { opacity : 0.0; }
+                to { opacity : 1.0; }
+            }
+            .btn:focus{ outline:none; box-shadow:none; }
+        </style>
+    </head>
+<body style="height:100%;">    
+    <div class="container" style="height:100vh;">       
+        <div class="row align-items-center align-items-around justify-content-between h-100"> 
+            <div class="col-md-1 col-lg-1">
+                <div class="row">
+                    <button class="btn text-light m-1 fa-2x" id="home"><i class="fa fa-home" aria-hidden="true"></i></button>
+                </div>
+                <div class="row">
+                    <button class="btn text-light m-1" id="grid"><i class="fa fa-th" aria-hidden="true"></i></button>                
+                </div>
+            </div>
+            
+            <!--Home Section-->
+            <div class="col-md-12 col-lg-4 mt-md-4 mt-lg-1"> 
+                
+                <!--Seachbox-->
+                <div class="d-none container" id="searchBox">
+                    <div class="text-center m-2">
+                        <i class="boxesIcon fa fa-th-large fa-2x" aria-hidden="true"></i>                                                                  
+                    </div>
+                    <form method="POST">
+                        <div class="row align-items-center">
+                            <div class="col-3">                        
+                                <select class="form-control bg-success text-light text-center" style="font-size:2.5vw;">
+                                    <option default>P</option>
+                                    <option>A</option>                            
+                                </select>
+                            </div>
+                            <div class="col-8">
+                                <input type="number" class="form-control" placeholder="1024" name="searchThread"/>
+                            </div>
+                        </div>
+                    </form>                
+                </div>
+
+                <ul class="list-group" id="homeList">                    
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between">                            
+                            <span class="btn"><label class="h2">New Box &nbsp</label></span>
+                            <div>
+                                <span class="btn disabled ft-teal"><i class="fa fa-th-large fa-2x" aria-hidden="true"></i></span>
+                                <button class="btn btn-transparent ft-purple p-0 m-0" id="addNewBoxBtn"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between">                            
+                            <span class="btn"><label class="h2">Edit Count &nbsp</label></span>
+                            <div>
+                                <span class="btn disabled ft-blue"><i class="fa fa-arrow-circle-up fa-2x" aria-hidden="true"></i></span>
+                                <button class="btn btn-transparent ft-purple p-0 m-0" id="editCountBtn"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                    </li>
+                    
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between">                            
+                            <span class="btn"><label class="h2">Sold &nbsp</label></span>
+                            <div>
+                                <span class="btn disabled ft-aqua"><i class="fa fa-shopping-basket fa-2x" aria-hidden="true"></i></span>
+                                <button class="btn btn-transparent ft-purple p-0 m-0" id="soldBtn"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+                            
+            <!--Second Section-->
+
+            <!--Default Section-->
+            <div class="col-md-12 col-lg-6" id="defaultSection">
+                <div class="container bg-white rounded p-3">
+                {% if alertboxes %}
+                    {% for box in alertboxes %}
+                        <span class="btn {% if box.ThreadCount > 4 %} btn-warning {% else %} btn-danger {% endif %} text-white">
+                            {{ box.BoxId }}&nbsp<sup>{{box.ThreadCount}}</sup>
+                        </span>
+                    {% endfor %}
+                {% endif %}
+                </div>
+            </div>  
+            
+            <!--New Box Form-->
+            <div class="col-md-12 col-lg-6 d-none" id="addNewBoxSection">                
+                <div class="container p-4 pt-2 m-0 bg-light rounded">
+                    <div class="d-flex justify-content-center">
+                        <i class="fa fa-th-large fa-3x ft-teal" aria-hidden="true"></i>
+                    </div>
+                    <form method="POST">
+                    {% csrf_token %}
+                        <div class="form-group mt-4">
+                            <div class="row">   
+                                <div class="col-md-12 col-lg-4">                    
+                                    <label>Series</label>
+                                    <select class="form-select" aria-label="Default select example" name="series">                                        
+                                        <option value="P">P</option>
+                                        <option value="A">A</option>                                        
+                                    </select>
+                                </div>
+                                <div class="col-md-12 col-lg-8">
+                                    <label>Box ID</label>
+                                    <input type="text" class="form-control" placeholder="1024" name="box_id" autofocus required/>
+                                </div>
+                            </div>
+
+                            <div class="row mt-2">   
+                                <div class="col-md-12 col-lg-6">                    
+                                    <label>Batch</label>
+                                    <input type="number" class="form-control" placeholder="Max:25" max="25" name="batch" autofocus required/>
+                                </div>
+                                <div class="col-md-12 col-lg-6">
+                                    <label>Row</label>
+                                    <input type="number" class="form-control" placeholder="max:24" max="24" name="row" autofocus required/>
+                                </div>
+                            </div>           
+
+                            <div class="row mt-2">   
+                                <div class="col-md-12 col-lg-12">                    
+                                    <label>Thread Count</label>
+                                    <input type="number" class="form-control" placeholder="Max:20" max="20" value="20" name="thread_count" autofocus required/>
+                                </div>                                
+                            </div>           
+
+                            <div class="d-flex justify-content-center mt-4">
+                                <button type="submit" class="btn btn-primary" name="save_box" value="true">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>              
+
+            <!--Edit Count Form-->
+            <div class="col-md-12 col-lg-6 d-none" id="editCountSection">
+                <div class="container p-1 m-0 bg-light rounded">
+                    <div class="d-flex justify-content-center mt-1">
+                        <i class="fa fa-arrow-circle-up fa-3x ft-blue" aria-hidden="true"></i>
+                    </div>
+                    <form method="POST">
+                    {% csrf_token %}
+                        <div class="m-2 row align-items-between p-0">    
+                            <div class="col-md-12 col-lg-7 mt-1">                    
+                                <label>Box ID</label>
+                                <input type="text" class="form-control" placeholder="1024" name="edit_box_id" autofocus required/>
+                            </div>
+                            <div class="col-md-12 col-lg-5 mt-1">
+                                <label>Count</label>
+                                <input type="number" class="form-control" placeholder="Max:20" max="20" name="edit_count" required/>
+                            </div>
+                        </div>
+                     
+                        <div class="d-flex justify-content-center m-2 mt-4">
+                            <button class="btn btn-primary" type="submit" name="edit_set" value="true">Set</button>
+                        </div>
+                    </form>
+                </div>
+            </div>  
+
+             <!--Sold Thread Form-->
+            <div class="col-md-12 col-lg-6 d-none" id="soldSection">
+                <div class="container p-1 m-0 bg-light rounded">
+                    <div class="d-flex justify-content-center">
+                        <i class="fa fa-shopping-basket fa-3x ft-aqua" aria-hidden="true"></i>
+                    </div>
+                    <form method="POST">
+                    {% csrf_token %}
+                        <div class="m-2 row align-items-between p-0">    
+                            <div class="col-md-12 col-lg-7 mt-1">                    
+                                <label>Box ID</label>
+                                <input type="text" class="form-control" placeholder="1024" name="sold_box_id" autofocus required/>
+                            </div>
+                            <div class="col-md-12 col-lg-5 mt-1">
+                                <label>Sold</label>
+                                <input type="number" class="form-control" placeholder="Max:20" name="sold" required/>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center m-2 mt-4">
+                            <button class="btn btn-primary" type="submit" name="save" value="true">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>  
+            <!--Second Section Ends-->            
+            <div class="col-md-12 col-lg-6 d-none" id="gridSection">
+                <div class="container p-1 m-0 bg-light rounded">
+                </div>
+            </div>
+        </div>       
+    </div>
+    <script type="text/javascript" src="{% static 'static_jquery/js/jquery.js' %}" ></script>
+    <script type="text/javascript" src="{% static 'js/BASIC.js' %}"></script>
+</body>
+</html>

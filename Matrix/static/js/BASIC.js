@@ -56,9 +56,13 @@ modevalues = {  background : "",
                 lists : { label : "", background : "", plusbuttonhover : "" , hover : "", antihover : "", hovertext : "", antihovertext : ""},
                 homeform : { label : "", background : "" },
                 menuicons : "",
+                bodybackground : "",
+                table : { background : "", thead : "", theadtextcolor : "", bodytextcolor : ""}
             };
 
-if(mode="light"){
+if(mode=="light"){
+    modevalues.bodybackground = "white"
+
     modevalues.lists.background = "black";
     modevalues.lists.label = "white";
     modevalues.lists.plusbuttonhover = "black";
@@ -71,10 +75,38 @@ if(mode="light"){
     
     modevalues.homeform.background = "black";
     modevalues.homeform.label = "white";    
-    $("#modeset").html("<i class='fas fa-moon'></i>");   
+
+    modevalues.table.thead = "black";
+    modevalues.table.background = "black";
+    modevalues.table.bodytextcolor = "white";
+
+    var buttonhtml = "<i class='fas fa-moon'></i>";
 }
 
-else if(mode="dynamic"){
+else if(mode=="dark"){
+    var buttonhtml = "<i class='fas fa-sun'></i>";
+    dark = "rgb(42,43,46)";
+    modevalues.bodybackground = "black";
+
+    modevalues.lists.background = dark;
+    modevalues.lists.label = "white"; 
+    modevalues.lists.plusbuttonhover = "white";
+    modevalues.lists.hover = "black";
+    modevalues.lists.antihover = dark;
+    modevalues.lists.hovertext = "white";
+    modevalues.lists.antihovertext = "white";
+
+    modevalues.menuicons = "white";
+
+    modevalues.homeform.background = dark;
+    modevalues.homeform.label = "white";  
+
+    modevalues.table.thead = dark;
+    modevalues.table.background = dark;
+    modevalues.table.bodytextcolor = "white";
+}
+
+else{
     var colors = new Array(
         [62,35,255],
         [60,255,60],
@@ -134,7 +166,7 @@ else if(mode="dynamic"){
         }
     setInterval(updateGradient,10); 
 }    
-
+$("body").css({"background-color":modevalues.bodybackground});
 $(".list-group-item").css({ "background-color" : modevalues.lists.background});
 $(".list-group-item label").css({"color" : modevalues.lists.label});
 $("#grid , #home , #modeset").css({"color" : modevalues.menuicons});
@@ -153,3 +185,8 @@ $(".list-group-item").hover(function(){
     $(this).css({"background-color":modevalues.lists.antihover});
     $(".list-group-item label").css({"color" : modevalues.lists.antihovertext});
 });
+
+$("table").css({"background-color":modevalues.table.background, "color":modevalues.table.bodytextcolor});
+$("table thead").css({"background-color":modevalues.table.thead, "color":modevalues.table.theadtextcolor});
+
+$("#modeset").html(buttonhtml);

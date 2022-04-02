@@ -14,17 +14,20 @@
         <script src="{% static 'fontawesome_free/js/all.min.js' %}"></script>
         <style>            
             .ft-purple{ color : purple; }
-            .ft-blue{ color : blue; }
-            .ft-teal{ color : teal; }
-            .ft-darksalmon{ color : darksalmon; }
-            .ft-aqua{ color : aqua; }
-            body{ font-family: 'Comfortaa', cursive; background-color : green; }
+            .ft-blue{ color : blue; } .bg-blue{ background-color : blue; }
+            .ft-teal{ color : teal; } .bg-teal{ background-color : teal; }            
+            .ft-darksalmon{ color : darksalmon; } .bg-darksalmon{ background-color : darksalmon; }
+            .ft-aqua{ color : aqua; } .bg-aqua{ background-color : aqua; }
+            body{ font-family: 'Comfortaa', cursive; }
             select, .boxesIcon{ transition : all 1s; }
             .list-group-item{ transition : all 0.5s; }
+        {% comment %}
             .list-group-item:hover{ background-color : black;}
             .list-group-item:hover label{ color : white;}
+        
             #addNewBoxBtn:hover , #editCountBtn:hover , #soldBtn:hover{ color : white; }
-            #gridSection .container , #defaultSection .container , #addNewBoxSection .container , #editCountSection .container , #soldSection .container{ animation : widthanimation 0.55s 0s  alternate; }
+        {% endcomment %}
+            #gridSection .container , #defaultSection .container , #addNewBoxSection .container , #editCountSection .container , #soldSection .container{ animation : widthanimation 0.65s 0s  alternate; }
             @keyframes widthanimation{
                 from { width : 40%; }
                 to{ width : 100%; }
@@ -42,10 +45,13 @@
         <div class="row align-items-center align-items-around justify-content-between h-100"> 
             <div class="col-md-1 col-lg-1">
                 <div class="row">
-                    <button class="btn text-light m-1 fa-2x" id="home"><i class="fa fa-home" aria-hidden="true"></i></button>
+                    <button class="btn m-1 fa-2x" id="home"><i class="fa fa-home" aria-hidden="true"></i></button>
                 </div>
                 <div class="row">
-                    <button class="btn text-light m-1" id="grid"><i class="fa fa-th" aria-hidden="true"></i></button>                
+                    <button class="btn m-1" id="grid"><i class="fa fa-th" aria-hidden="true"></i></button>                
+                </div>
+                <div class="row">
+                    <button class="btn m-1" id="modeset"></button>
                 </div>
             </div>
             
@@ -78,7 +84,7 @@
                             <span class="btn"><label class="h2">New Box &nbsp</label></span>
                             <div>
                                 <span class="btn disabled ft-teal"><i class="fa fa-th-large fa-2x" aria-hidden="true"></i></span>
-                                <button class="btn btn-transparent ft-purple p-0 m-0" id="addNewBoxBtn"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></button>
+                                <pbutton class="btn btn-transparent ft-purple p-0 m-0" id="addNewBoxBtn"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></button>
                             </div>
                         </div>
                     </li>
@@ -108,22 +114,51 @@
                             
             <!--Second Section-->
 
-            <!--Default Section-->
+            <!--Default Section-->  
+            <!--
             <div class="col-md-12 col-lg-6" id="defaultSection">
                 <div class="container bg-white rounded p-3">
-                {% if alertboxes %}
+                    <div class="row text-center justify-content-around">
+                        <div class="col-md-3">Box Number</div>
+                        <div class="col-md-4">Thread Count</div>
+                        <div class="col-md-1">Flag</div>
+                    </div>                    
                     {% for box in alertboxes %}
-                        <span class="btn {% if box.ThreadCount > 4 %} btn-warning {% else %} btn-danger {% endif %} text-white">
-                            {{ box.BoxId }}&nbsp<sup>{{box.ThreadCount}}</sup>
-                        </span>
+                    <div class="row justify-content-around">
+                        <div class="col-sm-3 border-left border-dark">{{box.BoxId}}</div>
+                        <div class="col-sm-3 ">{{box.ThreadCount}}</div>
+                        <div class="col-sm-1"><span class="btn w-100  {% if box.ThreadCount > 4 %} btn-warning {% else %} btn-danger {% endif %} "></span></div>
+                    </div>
                     {% endfor %}
-                {% endif %}
                 </div>
-            </div>  
-            
+            </div>
+            -->
+            <div class="col-md-12 col-lg-6" id="defaultSection">
+                <div class="container bg-white rounded p-0">
+                    <div class="table-responsive-sm">
+                        <table class="table table-hover table-borderless">
+                            <thead class="bg-black text-light text-center">
+                                <tr> 
+                                    <th scope="col">Box Number</th>
+                                    <th scope="col">Thread Count</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for box in alertboxes %}
+                                <tr class="p-2">
+                                    <td>{{box.BoxId}}</td>
+                                    <td class="{% if box.ThreadCount > 4 %} bg-warning {% else %} bg-danger {% endif %}>{{box.ThreadCount}} text-light">{{box.ThreadCount}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
             <!--New Box Form-->
-            <div class="col-md-12 col-lg-6 d-none" id="addNewBoxSection">                
-                <div class="container p-4 pt-2 m-0 bg-light rounded">
+            <div class="col-md-12 col-lg-6 d-none mt-3 homeform" id="addNewBoxSection">                
+                <div class="container p-4 pt-2 m-0 rounded">
                     <div class="d-flex justify-content-center">
                         <i class="fa fa-th-large fa-3x ft-teal" aria-hidden="true"></i>
                     </div>
@@ -163,7 +198,7 @@
                             </div>           
 
                             <div class="d-flex justify-content-center mt-4">
-                                <button type="submit" class="btn btn-primary" name="save_box" value="true">Save</button>
+                                <button type="submit" class="btn bg-teal text-light" name="save_box" value="true">Save</button>
                             </div>
                         </div>
                     </form>
@@ -171,8 +206,8 @@
             </div>              
 
             <!--Edit Count Form-->
-            <div class="col-md-12 col-lg-6 d-none" id="editCountSection">
-                <div class="container p-1 m-0 bg-light rounded">
+            <div class="col-md-12 col-lg-6 d-none homeform" id="editCountSection">
+                <div class="container p-1 m-0 rounded">
                     <div class="d-flex justify-content-center mt-1">
                         <i class="fa fa-arrow-circle-up fa-3x ft-blue" aria-hidden="true"></i>
                     </div>
@@ -190,15 +225,15 @@
                         </div>
                      
                         <div class="d-flex justify-content-center m-2 mt-4">
-                            <button class="btn btn-primary" type="submit" name="edit_set" value="true">Set</button>
+                            <button class="btn bg-blue text-light" type="submit" name="edit_set" value="true">Set</button>
                         </div>
                     </form>
                 </div>
             </div>  
 
              <!--Sold Thread Form-->
-            <div class="col-md-12 col-lg-6 d-none" id="soldSection">
-                <div class="container p-1 m-0 bg-light rounded">
+            <div class="col-md-12 col-lg-6 d-none homeform" id="soldSection">
+                <div class="container p-1 m-0 rounded">
                     <div class="d-flex justify-content-center">
                         <i class="fa fa-shopping-basket fa-3x ft-aqua" aria-hidden="true"></i>
                     </div>
@@ -215,7 +250,7 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-center m-2 mt-4">
-                            <button class="btn btn-primary" type="submit" name="save" value="true">Save</button>
+                            <button class="btn bg-aqua text-light" type="submit" name="save" value="true">Save</button>
                         </div>
                     </form>
                 </div>
@@ -227,6 +262,9 @@
             </div>
         </div>       
     </div>
+    <script>
+        var mode = {{mode|safe}};
+    </script>
     <script type="text/javascript" src="{% static 'static_jquery/js/jquery.js' %}" ></script>
     <script type="text/javascript" src="{% static 'js/BASIC.js' %}"></script>
 </body>

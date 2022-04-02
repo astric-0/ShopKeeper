@@ -1,7 +1,8 @@
 from django.shortcuts import render
-from .models import Section
-
+from .models import Section, WebPageMode
+from json import dumps
 def Tester(request):
+   
     if request.POST.get('save_box')=='true':
         section = Section(Series=request.POST.get('series'), BoxId=request.POST['box_id'], Batch=request.POST['batch'], BoxNumber=request.POST['row'], ThreadCount=request.POST['thread_count'])
         if section.save():
@@ -32,4 +33,5 @@ def Tester(request):
             print('*******NOT FOUND*******')
 
     alertboxes = list(Section.objects.filter(ThreadCount__lte=8).order_by('Batch'))
-    return render(request, 'Matrix/BASIC.html',{'title':'T E S T__P A G E', 'alertboxes':alertboxes})
+            
+    return render(request, 'Matrix/BASIC.html',{'title':'T E S T__P A G E', 'alertboxes':alertboxes, 'mode':dumps(request.user.webpagemode.Mode)})
